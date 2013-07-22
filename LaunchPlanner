@@ -1,0 +1,63 @@
+import java.io.IOException;
+
+import planner.controller.ScreenController;
+import planner.factory.AppFactory;
+
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+public class LaunchPlanner extends Application {
+
+  public static final String MAIN_SCREEN = "main";
+	public static final String MAIN_SCREEN_FXML = "/fxml/planner/CPane.fxml";
+	public static final String ADDPROJECT_SCREEN = "addproject";
+	public static final String ADDPROJECT_SCREEN_FXML = "/fxml/planner/AddProject.fxml";
+	
+	AppFactory factory = AppFactory.getFactory();
+
+	@Override
+	public void start(Stage primaryStage) {
+
+		ScreenController mainContainer = new ScreenController();
+		mainContainer.loadScreen(MAIN_SCREEN, MAIN_SCREEN_FXML);
+		mainContainer.loadScreen(ADDPROJECT_SCREEN, ADDPROJECT_SCREEN_FXML);
+
+		mainContainer.setScreen(MAIN_SCREEN);
+
+		try {
+			primaryStage.setTitle("Note using FXML");
+			Pane myPane;
+			myPane = (Pane) FXMLLoader.load(getClass().getResource("/fxml/planner/CPane.fxml"));
+			Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+
+			// set Stage boundaries to visible bounds of the main screen
+			primaryStage.setX(primaryScreenBounds.getMinX());
+			primaryStage.setY(primaryScreenBounds.getMinY());
+			primaryStage.setWidth(primaryScreenBounds.getWidth());
+			primaryStage.setHeight(primaryScreenBounds.getHeight());
+
+			primaryStage.initStyle(StageStyle.TRANSPARENT);
+
+			Scene scene = new Scene(myPane);
+
+			scene.setFill(null);
+
+			scene.getStylesheets().add(LaunchPlanner.class.getResource("/css/planner.css").toExternalForm());
+
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void main(String[] args) {
+		launch(args);
+	}
+}
